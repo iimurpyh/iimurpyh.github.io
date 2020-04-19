@@ -7,7 +7,7 @@ local game = false
 local objects = {}
 local player_ground = lg.newImage("assets/images/smile-lad.png")
 local player_air = lg.newImage("assets/images/smile-lad-2.png")
-lg.setBackgroundColor(10, 10, 10)
+lg.setBackgroundColor(0, 0, 0) -- 10, 10, 10
 function newRect(x, y, w, h, state, parent, density, image)
 	local rect = {}
 	if parent then
@@ -202,14 +202,10 @@ function love.update(dt)
 		else
 			timeout_ball = 10
 		end
-		
+		print(ballPause)
 		if ballPause > 0 then
-			ball.body:setType("static")
 			ball.body:setPosition(500/2, 20)
-			ballPause = ballPause - dt
-			if ballPause < 0 then
-				ball.body:setType("dynamic")
-			end
+			ballPause = 0
 		end
 		
 		if rotateUp and holder.handle then
@@ -320,7 +316,6 @@ function love.draw()
 		lg.setFont(subfont)
 		lg.print("Score: " .. tostring(score), 20, 50)
 	end
-	
 	if timer > 0 then
 		lg.print("youre loser", 100, 100)
 	end
