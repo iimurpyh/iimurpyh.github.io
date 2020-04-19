@@ -118,7 +118,6 @@ local sound_collectpow = love.audio.newSource(love.sound.newSoundData("assets/po
 local sound_coin = love.audio.newSource(love.sound.newSoundData("assets/coin.wav"))
 local sound_hit = love.audio.newSource(love.sound.newSoundData("assets/hit.wav"))
 function collectPowup(powType)
-	print(powType)
 	if powType < 4 then
 		sound_collectpow:clone():play()
 	else
@@ -155,7 +154,6 @@ function beginContact(a, b, coll)
 	for i,v in pairs(powerups) do
 		if FixturesColliding(a, b, v.rect.fixture, ball.fixture) and v.rect.type < 5 then
 			v.DestroyTag = true
-			print(v.rect.type)
 			collectPowup(v.rect.type)
 		end
 	end
@@ -202,7 +200,6 @@ function love.update(dt)
 		else
 			timeout_ball = 10
 		end
-		print(ballPause)
 		if ballPause > 0 then
 			ball.body:setPosition(500/2, 20)
 			ballPause = 0
@@ -212,13 +209,11 @@ function love.update(dt)
 			local nextAngle = holder.handle.body:getAngle() + holder.handle.body:getAngularVelocity() / 3;
 			local totalRotation = 0 - nextAngle
 			local toRotate = 0
-			print(nextAngle)
 			if totalRotation > 0 then
 				toRotate = 999999
 			else
 				toRotate = -999999
 			end
-			print(holder.handle.body:getAngle() .. " floored: " .. math.floor(holder.handle.body:getAngle() * 40) / 40)
 			if math.floor(holder.handle.body:getAngle() * 40) / 40 == 0 then
 				powcooldown = powcooldown - dt
 				holder.handle.body:setAngularVelocity(0)
@@ -315,9 +310,6 @@ function love.draw()
 	else
 		lg.setFont(subfont)
 		lg.print("Score: " .. tostring(score), 20, 50)
-	end
-	if timer > 0 then
-		lg.print("youre loser", 100, 100)
 	end
 end
 
