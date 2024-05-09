@@ -61,7 +61,7 @@
 .card-icon {
     aspect-ratio: 115 / 74;
     margin: 10px;
-    background-image: url(../img/cards/placeholder.png);
+    background-image: url(../media/cards/placeholder.png);
     background-size: cover;
     border: var(--border-thick);
     image-rendering: pixelated;
