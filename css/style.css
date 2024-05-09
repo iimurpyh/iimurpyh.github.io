@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, sans-serif
+}
+
+:root {
+    --border-thick: 2px solid;
+    --border-thin: 1px solid;
+
+    --color-stamina: blue;
+    --color-pstamina: red;
+
+    --font-size-small: 12px;
+}
+
+/* Card and Stamina Units */
+
+.card {
+    aspect-ratio: 180 / 260;
+    min-height: 0;
+    max-width: 180px;
+    padding-top: 5px;
+    border: var(--border-thick);
+    position: relative;
+    background-color: white;
+}
+
+.card-blank {
+    background-color: lightslategray;
+    border-color: dimgrey;
+}
+
+.card-top {
+    display: flex;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.card-stamina-cost {
+    margin-left: auto;
+    align-items: center;
+    display: flex;
+}
+
+.stamina-unit {
+    aspect-ratio: 1;
+    transform: rotate(45deg);
+    border: var(--border-thin);
+    background-color: var(--color-stamina);
+}
+
+.card-stamina-cost > .stamina-unit {
+    height: 10px;
+}
+
+.pstamina {
+    background-color: var(--color-pstamina);
+}
+
+.card-icon {
+    aspect-ratio: 115 / 74;
+    margin: 10px;
+    background-image: url(../img/cards/placeholder.png);
+    background-size: cover;
+    border: var(--border-thick);
+    image-rendering: pixelated;
+}
+
+.card-title, .card-desc {
+    font-size: var(--font-size-small);
+    user-select: none;
+}
+
+.card-desc {
+    text-align: center;
+}
+
+/* Deck and Turn Selector */
+
+.deck {
+    bottom: 0px;
+    position: fixed;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: center;
+    overflow-y:  auto;
+}
+
+.deck > .card {
+    margin: 5px;
+    width: 60%;
+}
+
+.tselector > .card {
+    margin: 5px;
+    width: 60%;
+    max-width: 130px;
+}
+
+.tselector {
+    /* top: 1.1em; */
+    position: fixed;
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: center;
+    padding-top: 1em;
+    overflow-y: auto;
+}
+
+.tselector > .card::after {
+    content: '';
+    position: absolute;
+    aspect-ratio: 1;
+    transform: translate(-50%,-50%) rotate(45deg);
+    border: var(--border-thin);
+    background-color: var(--color-stamina);
+    text-align: center;
+    width: 1em;
+    display: inline-block;
+    left: 50%;
+    top: -10px;
+}
+
+.tselector-slot > .stamina-unit {
+    max-height: 20px;
+    max-width: 20px;
+}

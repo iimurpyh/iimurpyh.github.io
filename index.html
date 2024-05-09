@@ -1,133 +1,30 @@
-<!doctype html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Teeter</title>
-
-    <!-- Load custom style sheet -->
-   <!-- <link rel="stylesheet" type="text/css" href="theme/love.css"> -->
-  </head>
-  <body>
-    <center>
-      <div>
-        <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-        <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="500" height="500"></canvas>
-      </div>
-    </center>
-
-    <script type='text/javascript'>
-      var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
-      function drawLoadingText(text) {
-        var canvas = loadingContext.canvas;
-
-        loadingContext.fillStyle = "rgb(142, 195, 227)";
-        loadingContext.fillRect(0, 0, canvas.scrollWidth, canvas.scrollHeight);
-
-        loadingContext.font = '2em arial';
-        loadingContext.textAlign = 'center'
-        loadingContext.fillStyle = "rgb( 11, 86, 117 )";
-        loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2);
-
-        loadingContext.fillText("Powered By Emscripten.", canvas.scrollWidth / 2, canvas.scrollHeight / 4);
-        loadingContext.fillText("Powered By LÖVE.", canvas.scrollWidth / 2, canvas.scrollHeight / 4 * 3);
-      }
-
-      window.addEventListener("keydown", function(e) {
-        // space and arrow keys
-        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-          e.preventDefault();
-        }
-      }, false);
-
-      var Module = {
-        arguments: ['./'],
-        printErr: console.error.bind(console),
-        canvas: (function() {
-          var canvas = document.getElementById('canvas');
-
-          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
-          // application robust, you may want to override this behavior before shipping!
-          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
-          canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
-
-          return canvas;
-        })(),
-        setStatus: function(text) {
-          if (text) {
-            drawLoadingText(text);
-          } else if (Module.didSyncFS && Module.remainingDependencies === 0) {
-            Module.callMain(Module.arguments);
-            document.getElementById('loadingCanvas').style.display = 'none';
-            document.getElementById('canvas').style.display = 'block';
-          }
-        },
-        didSyncFS: false,
-        totalDependencies: 0,
-        remainingDependencies: 0,
-        monitorRunDependencies: function(left) {
-          this.remainingDependencies = left;
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-        }
-      };
-      Module.setStatus('Downloading...');
-      window.onerror = function(event) {
-        // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
-        Module.setStatus('Exception thrown, see JavaScript console');
-        Module.setStatus = function(text) {
-          if (text) Module.printErr('[post-exception status] ' + text);
-        };
-      };
-    </script>
-    <script type="text/javascript" src="game.js"></script>
-    <script async type="text/javascript" src="love.js"></script>
-<html>
+<!DOCTYPE html>
 <head>
-	<title></title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/javascript" src="lib/impact/impact.js"></script>
+	<script type="text/javascript" src="lib/game/main.js"></script>
 </head>
+
 <body>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-<h1 style="text-align: center;"><span style="font-family:tahoma,geneva,sans-serif;"><span style="font-size:48px;">Teeter</span></span></h1>
+    <canvas id="canvas"></canvas>
+    <!--
+    <div class="tselector">
+        <div class="card"></div>
+    </div>
+    <div class="deck">
+        <div class="card">
+            <div class="card-top">
+                <div class="card-title">test</div>
+                <div class="card-stamina-cost">
+                    <div class="stamina-unit"></div>
+                </div>
+            </div>
+            <div class="card-icon"></div>
+            <div class="card-desc">description</div>
+        </div>
+    </div>
+    -->
 
-<p style="text-align: center;"><span style="font-family:tahoma,geneva,sans-serif;">Made by Murpyh for the Ludum Dare 46 Jam</span></p>
-
-<p><span style="font-size:20px;"><span style="font-family:tahoma,geneva,sans-serif;"><strong>IMPORTANT: IF THE GAME IS FREEZING, CLEAR YOUR CACHE AND/OR TRY USING CHROME</strong></span></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;"><strong>How to Play</strong></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Your goal is to prevent the &quot;ball&quot; (the green smiley) from falling off the screen while collecting as many points as possible. You can&#39;t directly control the ball, but you can control a &quot;cup&quot; that can hold it.</span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">If the ball is not within the cup for 10 seconds, it also counts as a loss.</span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;"><span style="color:#FF0000;">Red</span> powerups will cause your cup to face upright, useful if it flips over.</span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;"><span style="color:#0000FF;">Blue</span> powerups will reset the 10 second timer.</span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;"><span style="color:#DAA520;">Yellow</span> powerups will teleport the ball to the upper-middle of the screen. Useful to grab other powerups in hard-to-reach places.</span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;"><strong>Credits</strong></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Made with L&Ouml;VE: <a href="https://love2d.org/">https://love2d.org/</a></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Ported to the web using love.js: <a href="https://github.com/TannerRogalsky/love.js/">https://github.com/TannerRogalsky/love.js/</a></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Font used is &quot;Diary of an 8-bit mage&quot; by Chequered Ink: <a href="https://www.fontspace.com/diary-of-an-8-bit-mage-font-f28455">https://www.fontspace.com/diary-of-an-8-bit-mage-font-f28455</a></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Sound effects made with Bfxr: <a href="https://www.bfxr.net/">https://www.bfxr.net/</a></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Physics engine is Box2d: <a href="https://box2d.org/">https://box2d.org/</a></span></p>
-
-<p><span style="font-family:tahoma,geneva,sans-serif;">Have fun! :)</span></p>
-</body>
-</html>
 
 </body>
-</html>
-
-  </body>
-</html>
