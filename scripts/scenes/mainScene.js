@@ -1,5 +1,5 @@
-import PhaserLogo from '../objects/phaserLogo'
-import FpsText from '../objects/fpsText'
+import PhaserLogo from './scripts/objects/phaserLogo';
+import FpsText from './scripts/objects/fpsText';
 
 export default class MainScene extends Phaser.Scene {
   fpsText
