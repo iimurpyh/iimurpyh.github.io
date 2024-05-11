@@ -1,13 +1,13 @@
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
-      super({ key: 'PreloadScene' })
+      super({ key: 'PreloadScene' });
     }
   
     preload() {
-      this.load.image('phaser-logo', 'assets/img/phaser-logo.png')
+      this.load.aseprite('player', 'assets/img/player.png', 'assets/spritesheets/player.json');
     }
   
     create() {
-      this.scene.start('MainScene')
+      this.scene.start('MainScene');
     }
   }

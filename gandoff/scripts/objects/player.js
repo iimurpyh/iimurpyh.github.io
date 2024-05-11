@@ -1,4 +1,8 @@
 export default class Player extends Phaser.Physics.Arcade.Sprite {
+  jump() {
+    this.setVelocityY(-400)
+  }
+
   constructor(scene, x, y) {
     super(scene, x, y, 'player')
     scene.add.existing(this)
@@ -6,8 +10,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.setCollideWorldBounds(true)
       .setInteractive()
-      .on('pointerdown', () => {
-        this.setVelocityY(-400)
-      })
+      
+    scene.input.keyboard.on('keydown-W', () => {
+      this.jump();
+    });
+    
   }
 }
