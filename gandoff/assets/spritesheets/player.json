@@ -8,7 +8,7 @@
     "duration": 100
    },
    "player 1.ase": {
-    "frame": { "x": 104, "y": 1, "w": 102, "h": 122 },
+    "frame": { "x": 103, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
@@ -16,7 +16,7 @@
     "duration": 300
    },
    "player 2.ase": {
-    "frame": { "x": 207, "y": 1, "w": 102, "h": 122 },
+    "frame": { "x": 205, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
@@ -24,7 +24,7 @@
     "duration": 300
    },
    "player 3.ase": {
-    "frame": { "x": 310, "y": 1, "w": 102, "h": 122 },
+    "frame": { "x": 307, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
@@ -32,7 +32,7 @@
     "duration": 100
    },
    "player 4.ase": {
-    "frame": { "x": 413, "y": 1, "w": 102, "h": 122 },
+    "frame": { "x": 409, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
@@ -45,7 +45,7 @@
   "version": "1.2-973d0e3d-SDL",
   "image": "C:\\Users\\murpy\\Desktop\\Programming\\github-page\\gandoff\\assets\\img\\player.png",
   "format": "RGBA8888",
-  "size": { "w": 516, "h": 124 },
+  "size": { "w": 512, "h": 124 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 0, "direction": "forward" },
