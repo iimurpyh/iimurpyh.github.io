@@ -1,17 +1,15 @@
 import CharacterState from '../characterState.js';
 
-export default class Run extends CharacterState {
+export default class Fall extends CharacterState {
     constructor() {
         super();
-        this.animationName = 'run';
+        this.animationName = 'jump_down';
         this.animationLoop = true;
     }
 
     update(player, dt) {
         super.update(player, dt);
-        if (!player.grounded) {
-            return 'fall';
-        } else if (!player.moving) {
+        if (player.grounded) {
             return 'idle';
         }
     }

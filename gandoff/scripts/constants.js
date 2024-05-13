@@ -2,8 +2,8 @@ const Constants = {
     Player: {
         DRAG: 1200,
         WALK_SPEED: 1000,
-        JUMP_POWER: 4000,
-        JUMP_TIME: 1,
+        JUMP_POWER: 700,
+        JUMP_TIME: 0.3,
         MAX_SPEED: 400
     }
 }

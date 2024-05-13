@@ -20,6 +20,9 @@ export default class StateManager {
     }
 
     updateState(dt) {
-        this.state.update(...this._args, dt);
+        let newState = this.state.update(...this._args, dt);
+        if (newState) {
+            this.set(newState);
+        }
     }
 }

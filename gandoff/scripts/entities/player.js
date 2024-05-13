@@ -25,7 +25,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       states[stateName] = new PlayerStateMap[stateName]();
     }
 
-    this._grounded = true;
+    this.grounded = false;
+    this.moving = false;
     this._stateManager = new StateManager(states, 'idle', [this]);
   }
 
@@ -39,26 +40,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setFlipX(true);
       }
 
-      if (this._grounded && this._stateManager.is('idle')) {
-        this._stateManager.set('run');
-      }
+      this.moving = true;
     } else {
       this.body.setAccelerationX(0);
-      if (this._stateManager.is('run')) {
-        this._stateManager.set('idle');
-      }
+      
+      this.moving = false;
     }
   }
 
   setJumping(active) {
     if (active) {
-      this.body.setVelocityY(-this.jumpPower);
+      if (this.grounded) {
+        this.grounded = false;
+        this._stateManager.set('jump');
+      }
     } else {
-      this.body.setAccelerationY(0);
+      this._stateManager.set('fall');
     }
   }
 
-  update() {
-
+  update(_t, dt) {
+    console.log('help');
+    this.grounded = this.body.onFloor() || this.body.touching.down;
+    this._stateManager.updateState(dt);
   }
 }

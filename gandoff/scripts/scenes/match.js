@@ -13,6 +13,10 @@ export default class MatchScene extends GameScene {
     this._bindKeys();
   }
 
+  update(t, dt) {
+    this._localPlayer.update(t, dt);
+  }
+
   _bindKeys() {
     this.keybindHandler.connectToBind('move_left', this._onMoveLeft.bind(this));
     this.keybindHandler.connectToBind('move_right', this._onMoveRight.bind(this));

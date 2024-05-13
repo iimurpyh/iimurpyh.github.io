@@ -1,5 +1,6 @@
-{ "frames": {
-   "player 0.ase": {
+{ "frames": [
+   {
+    "filename": "0",
     "frame": { "x": 1, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
@@ -7,23 +8,26 @@
     "sourceSize": { "w": 100, "h": 120 },
     "duration": 100
    },
-   "player 1.ase": {
+   {
+    "filename": "1",
     "frame": { "x": 103, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
     "sourceSize": { "w": 100, "h": 120 },
-    "duration": 300
+    "duration": 200
    },
-   "player 2.ase": {
+   {
+    "filename": "2",
     "frame": { "x": 205, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
     "sourceSize": { "w": 100, "h": 120 },
-    "duration": 300
+    "duration": 200
    },
-   "player 3.ase": {
+   {
+    "filename": "3",
     "frame": { "x": 307, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
@@ -31,7 +35,8 @@
     "sourceSize": { "w": 100, "h": 120 },
     "duration": 100
    },
-   "player 4.ase": {
+   {
+    "filename": "4",
     "frame": { "x": 409, "y": 1, "w": 102, "h": 122 },
     "rotated": false,
     "trimmed": false,
@@ -39,7 +44,7 @@
     "sourceSize": { "w": 100, "h": 120 },
     "duration": 100
    }
- },
+  ],
  "meta": {
   "app": "https://github.com/LibreSprite/LibreSprite/",
   "version": "1.2-973d0e3d-SDL",
