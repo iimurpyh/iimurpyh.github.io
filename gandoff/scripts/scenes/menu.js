@@ -23,8 +23,8 @@ export default class MenuScene extends Phaser.Scene {
 
           if (switchTo == 'menu-host') {
             // Generate a 5-digit hexidecimal string to make an alphanumeric code
-            let num = (Math.random() * 0xFFFFF-1) + 1
-            this_scene._roomCode = num.toString(16);
+            let num = Math.floor((Math.random() * 0xFFFFF-1) + 1);
+            this_scene._roomCode = num.toString(16).toUpperCase();
             this.getChildByID('room-code-highlight').innerHTML = this_scene._roomCode;
           }
         }
