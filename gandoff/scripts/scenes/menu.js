@@ -22,9 +22,11 @@ export default class MenuScene extends Phaser.Scene {
           this.getChildByID(switchTo).style.display = 'flex';
 
           if (switchTo == 'menu-host') {
-            // Generate a 5-digit hexidecimal string to make an alphanumeric code
-            let num = Math.floor((Math.random() * 0xFFFFF-1) + 1);
-            this_scene._roomCode = num.toString(16).toUpperCase();
+            // Generate string of 5 random alphabetical letters as PeerJS identifier
+            let roomCode = '';
+            for (let i = 0; i < 5; i++) {
+              roomCode += String.fromCharCode((Math.random()*26) + 65);
+            }
             this.getChildByID('room-code-highlight').innerHTML = this_scene._roomCode;
           }
         }
