@@ -7,7 +7,7 @@ export default class Idle extends CharacterState {
 
     update(player, dt) {
         super.update(player, dt);
-        console.log(player.moving);
+        
         if (!player.grounded) {
             return 'fall';
         } else if (player.moving) {

@@ -15,7 +15,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
     "sourceSize": { "w": 100, "h": 120 },
-    "duration": 200
+    "duration": 300
    },
    {
     "filename": "2",
@@ -24,7 +24,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 100, "h": 120 },
     "sourceSize": { "w": 100, "h": 120 },
-    "duration": 200
+    "duration": 300
    },
    {
     "filename": "3",
@@ -44,7 +44,7 @@
     "sourceSize": { "w": 100, "h": 120 },
     "duration": 100
    }
-  ],
+ ],
  "meta": {
   "app": "https://github.com/LibreSprite/LibreSprite/",
   "version": "1.2-973d0e3d-SDL",

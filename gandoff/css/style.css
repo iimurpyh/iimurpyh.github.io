@@ -132,3 +132,17 @@
     max-height: 20px;
     max-width: 20px;
 }
+
+/* Main Menu */
+
+.menu-list {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#menu-main > button {
+    min-width: 200px;
+    min-height: 2em;
+}

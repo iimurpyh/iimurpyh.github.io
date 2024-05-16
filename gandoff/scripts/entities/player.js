@@ -16,7 +16,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true)
     this.setInteractive();
     this.body.setDrag(Constants.Player.DRAG, 0);
-    this.body.maxVelocity.set(Constants.Player.MAX_SPEED, Constants.Player.MAX_SPEED*10);
+    this.body.maxVelocity.set(Constants.Player.MAX_SPEED_X, Constants.Player.MAX_SPEED_Y);
 
 
     let states = {}
@@ -60,7 +60,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(_t, dt) {
-    console.log('help');
     this.grounded = this.body.onFloor() || this.body.touching.down;
     this._stateManager.updateState(dt);
   }

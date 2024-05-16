@@ -1,5 +1,6 @@
 import PreloadScene from './scenes/preload.js';
 import MatchScene from './scenes/match.js';
+import MenuScene from './scenes/menu.js';
 
 const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 720
@@ -13,13 +14,17 @@ const config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
   },
-  scene: [PreloadScene, MatchScene],
+  scene: [PreloadScene, MenuScene, MatchScene],
   physics: {
       default: 'arcade',
       arcade: {
           gravity: { y: 3000 }
       }
-  }
+  },
+  dom: {
+    createContainer: true
+  },
+  backgroundColor: 'rgb(255, 255, 255)'
 };
 
 const game = new Phaser.Game(config);
