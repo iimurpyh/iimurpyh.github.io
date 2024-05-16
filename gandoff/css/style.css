@@ -135,11 +135,16 @@
 
 /* Main Menu */
 
+h1, text {
+    text-align: center;
+}
+
 .menu-list {
     align-items: center;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 800px;
 }
 
 #menu-main > button {

@@ -1,8 +1,8 @@
 <div id="peer-join-menu">
     <div id="menu-main" class="menu-list">
         <h1>Gandoff</h1>
-        <button>Host</button>
-        <button>Join</button>
+        <button name="menu-switch" data-switch-to="menu-host">Host</button>
+        <button name="menu-switch" data-switch-to="menu-join">Join</button>
     </div>
     <div id="menu-host" class="menu-list" style="display: none;">
         <h1>
@@ -12,5 +12,11 @@
             Give the room code to someone else so they can join.
             Game will begin when another player has connected.
         </text>
+        <button name="menu-switch" data-switch-to="menu-main">Back</button>
+    </div>
+    <div id="menu-join" class="menu-list" style="display: none;">
+        <input type="text" maxlength="5" placeholder="Enter room code...">
+        <button name="connect">Connect</button>
+        <button name="menu-switch" data-switch-to="menu-main">Back</button>
     </div>
 </div>
