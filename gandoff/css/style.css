@@ -151,7 +151,3 @@ h1, text {
     min-width: 200px;
     min-height: 2em;
 }
-
-.room-code-highlight {
-    color: var(--color-stamina);
-}
