@@ -42,14 +42,20 @@ export default class MenuScene extends Phaser.Scene {
         this.getChildByID(switchTo).style.display = 'flex';
       } else if (event.target.name == 'connect') {
         let code = this_scene._menu.getChildByID('room-code-entry').value;
-        const connection = this_scene._peer.connect(code.toUpperCase());
+        let connection = this_scene._peer.connect(code.toUpperCase());
+        console.log(connection);
         if (connection.open) {
           this_scene._displayJoinError(null);
         } else {
           this_scene._displayJoinError('Peer not found.');
+          connection.close()
         }
       }
     });
+
+    this._peer.on('error', (err) => {
+      alert(`Peer connection error "${err}"`);
+    })
 
     this._menu.getChildByID('room-code-highlight').innerHTML = this_scene._roomCode;
     
