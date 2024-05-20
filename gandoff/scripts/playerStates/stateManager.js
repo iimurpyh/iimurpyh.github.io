@@ -18,7 +18,7 @@ export default class StateManager {
     }
 
     is(stateName) {
-        return this.stateName = stateName;
+        return this.stateName == stateName;
     }
 
     updateState(dt) {
