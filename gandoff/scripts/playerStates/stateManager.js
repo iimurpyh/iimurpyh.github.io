@@ -10,6 +10,7 @@ export default class StateManager {
         if (this._stateMap[stateName]) {
             this.state = this._stateMap[stateName];
             this.state.enter(...this._args);
+            this.stateName = stateName;
         } else {
             throw new Error(`No state with name ${stateName} exists`);
         }

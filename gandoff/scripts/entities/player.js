@@ -38,10 +38,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.grounded = false;
     this.moving = false;
+    this.jumping = false;
     this._stateManager = new StateManager(states, 'idle', [this]);
+
+    this._moveChanged = false;
+    this._jumpChanged = false;
   }
 
   setMoving(moveDirection, active) {
+    this._moveChanged = true;
+    this._moveDirection = moveDirection;
     if (active) {
       if (moveDirection == Direction.Right) {
         this.body.setAccelerationX(this.walkSpeed);
@@ -60,6 +66,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   setJumping(active) {
+    this._jumpChanged = true;
+    this.jumping = active;
     if (active) {
       if (this.grounded) {
         this.grounded = false;
@@ -78,7 +86,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   generatePacket() {
     if (PlayerInfo) {
       const PlayerStatePacket = PlayerInfo.lookupType('playerinfo.PlayerStatePacket');
-      let message = PlayerStatePacket.create({
+      let packet = {
         positionX: this.x,
         positionY: this.y,
         velocityX: this.body.velocity.x,
@@ -86,7 +94,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   
         state: this._stateManager.stateName,
         stateDuration: this._stateManager.state.duration
-      });
+      };
+
+      if (this._moveChanged) {
+        packet.moveChange = this.moving;
+        packet.moveChangeDirection = this._moveDirection;
+      }
+
+      if (this._jumpChanged) {
+        packet.jumpChange = this.jumping;
+      }
+
+      let message = PlayerStatePacket.create(packet);
 
       return PlayerStatePacket.encode(message).finish();
     } else {
@@ -101,10 +120,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       let info = PlayerStatePacket.decode(array);
       this.setPosition(info.positionX, info.positionY);
       this.body.setVelocity(info.velocityX, info.velocityY);
-      console.log(info.state);
       if (info.state) {
         this._stateManager.set(info.state);
         this._stateManager.state.duration = info.duration;
+      }
+
+      if (info.moveChange) {
+        this.setMoving(info.moveChange, info.moveChangeDirection);
+      }
+
+      if (info.jumpChange) {
+        this.setJumping(info.jumpChange);
       }
     }
   }

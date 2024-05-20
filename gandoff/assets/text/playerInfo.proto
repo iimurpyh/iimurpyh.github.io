@@ -1,6 +1,11 @@
 package playerinfo;
 syntax = "proto3";
 
+enum MoveDirection {
+    Left = 0;
+    Right = 1;
+}
+
 message PlayerStatePacket {
     /* Physics */
     float positionX = 1;
@@ -8,7 +13,13 @@ message PlayerStatePacket {
     float velocityX = 3;
     float velocityY = 4;
 
+    optional bool moveChange = 5;
+    optional MoveDirection moveChangeDirection = 6;
+    optional bool jumpChange = 7;
+
     /* State */
-    string state = 5;
-    float stateDuration = 6;
+    string state = 8;
+    float stateDuration = 9;
+
+    
 }
