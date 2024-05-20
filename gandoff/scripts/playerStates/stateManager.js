@@ -7,6 +7,7 @@ export default class StateManager {
     }
 
     set(stateName) {
+        if (this.is(stateName)) { return; }
         if (this._stateMap[stateName]) {
             this.state = this._stateMap[stateName];
             this.state.enter(...this._args);

@@ -128,9 +128,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       }
 
       if (info.moveChange) {
-        alert(info.moveChangeDirection);
-        alert(Direction.Left);
-        this.setMoving(info.moveChange, Direction.Left);
+        this.setMoving(info.moveChange, info.moveChangeDirection);
       }
 
       if (info.jumpChange) {
