@@ -99,10 +99,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (this._moveChanged) {
         packet.moveChange = this.moving;
         packet.moveChangeDirection = this._moveDirection;
+        this._moveChanged = false;
       }
 
       if (this._jumpChanged) {
         packet.jumpChange = this.jumping;
+        this._jumpChanged;
       }
 
       let message = PlayerStatePacket.create(packet);
