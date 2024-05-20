@@ -7,10 +7,21 @@ export default class MatchScene extends GameScene {
     super({ key: 'MatchScene' });
   }
 
-  create() {
+  create(data) {
     super.create();
     this._localPlayer = new Player(this, this.cameras.main.width / 2, 0);
     this._bindKeys();
+    this._peer = data.peer;
+    this._connection = data.connection;
+    console.log(data);
+
+    if (data.thisClientHosting) {
+      this._connection.send('hello world');
+    } else {
+      this._connection.on('data', (data) => {
+        alert(data);
+      })
+    }
   }
 
   update(t, dt) {

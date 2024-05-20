@@ -41,21 +41,40 @@ export default class MenuScene extends Phaser.Scene {
         }
         this.getChildByID(switchTo).style.display = 'flex';
       } else if (event.target.name == 'connect') {
+        // Clear error message
+        this_scene._displayJoinError();
         let code = this_scene._menu.getChildByID('room-code-entry').value;
+        // Try to connect by room key
         let connection = this_scene._peer.connect(code.toUpperCase());
-        console.log(connection);
-        if (connection.open) {
-          this_scene._displayJoinError(null);
-        } else {
-          this_scene._displayJoinError('Peer not found.');
-          connection.close()
-        }
+        
+        connection.on('open', function() {
+          this_scene.scene.start('MatchScene', {
+            thisClientHosting: false,
+            peer: this_scene._peer,
+            connection: connection
+          });
+        })
       }
     });
 
     this._peer.on('error', (err) => {
-      alert(`Peer connection error "${err}"`);
-    })
+      if (err.type == 'peer-unavailable') {
+        this._displayJoinError(err);
+      } else {
+        alert(err);
+      }
+    });
+
+    this._peer.on('open', () => {
+      alert(`Connected`);
+      this._peer.on('connection', (connection) => {
+        this.scene.start('MatchScene', {
+          thisClientHosting: true,
+          peer: this._peer,
+          connection: connection
+        });
+      });
+    });
 
     this._menu.getChildByID('room-code-highlight').innerHTML = this_scene._roomCode;
     
