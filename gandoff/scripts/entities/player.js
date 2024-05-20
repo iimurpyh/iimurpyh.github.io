@@ -104,7 +104,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
       if (this._jumpChanged) {
         packet.jumpChange = this.jumping;
-        this._jumpChanged;
+        this._jumpChanged = false;
       }
 
       let message = PlayerStatePacket.create(packet);
