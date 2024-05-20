@@ -1,5 +1,14 @@
+package playerinfo;
 syntax = "proto3";
 
-message PlayerInfo {
-    
+message PlayerStatePacket {
+    /* Physics */
+    float positionX = 1;
+    float positionY = 2;
+    float velocityX = 3;
+    float velocityY = 4;
+
+    /* State */
+    string state = 5;
+    float stateDuration = 6;
 }

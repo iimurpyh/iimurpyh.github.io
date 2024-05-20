@@ -3,6 +3,17 @@ import Constants from '../constants.js';
 import StateManager from '../playerStates/stateManager.js';
 import PlayerStateMap from '../playerStates/stateMap.js';
 
+let PlayerInfo;
+
+protobuf.load('assets/text/playerInfo.proto', function(error, root) {
+  if (error) {
+      throw error;
+  }
+
+  PlayerInfo = root;
+});
+
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y, 'player');
@@ -62,5 +73,39 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   update(_t, dt) {
     this.grounded = this.body.onFloor() || this.body.touching.down;
     this._stateManager.updateState(dt);
+  }
+
+  generatePacket() {
+    if (PlayerInfo) {
+      const PlayerStatePacket = PlayerInfo.lookupType('playerinfo.PlayerStatePacket');
+      let message = PlayerStatePacket.create({
+        positionX: this.x,
+        positionY: this.y,
+        velocityX: this.body.velocity.x,
+        velocityY: this.body.velocity.y,
+  
+        state: this._stateManager.stateName,
+        stateDuration: this._stateManager.state.duration
+      });
+
+      return PlayerStatePacket.encode(message).finish();
+    } else {
+      return null;
+    } 
+  }
+
+  setPacket(message) {
+    let array = new Uint8Array(message);
+    if (PlayerInfo) {
+      const PlayerStatePacket = PlayerInfo.lookupType('playerinfo.PlayerStatePacket');
+      let info = PlayerStatePacket.decode(array);
+      this.setPosition(info.positionX, info.positionY);
+      this.body.setVelocity(info.velocityX, info.velocityY);
+      console.log(info.state);
+      if (info.state) {
+        this._stateManager.set(info.state);
+        this._stateManager.state.duration = info.duration;
+      }
+    }
   }
 }

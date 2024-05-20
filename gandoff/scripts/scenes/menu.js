@@ -66,7 +66,6 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     this._peer.on('open', () => {
-      alert(`Connected`);
       this._peer.on('connection', (connection) => {
         this.scene.start('MatchScene', {
           thisClientHosting: true,
