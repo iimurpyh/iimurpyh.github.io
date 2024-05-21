@@ -96,13 +96,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         stateDuration: this._stateManager.state.duration
       };
 
-      if (this._moveChanged != null) {
+      if (this._moveChanged) {
         packet.moveChange = this.moving;
         packet.moveChangeDirection = this._moveDirection;
+        console.log(this._moveDirection);
         this._moveChanged = false;
       }
 
-      if (this._jumpChanged != null) {
+      if (this._jumpChanged) {
         packet.jumpChange = this.jumping;
         this._jumpChanged = false;
       }
@@ -127,11 +128,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this._stateManager.state.duration = info.duration;
       }
 
-      if (info.moveChange) {
+      if (info.moveChange != null) {
+        console.log(info.moveChange, info.jumpChange);
         this.setMoving(info.moveChange, info.moveChangeDirection);
       }
 
-      if (info.jumpChange) {
+      if (info.jumpChange != null) {
         this.setJumping(info.jumpChange);
       }
     }

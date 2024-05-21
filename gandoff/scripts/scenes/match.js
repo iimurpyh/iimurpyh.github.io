@@ -18,8 +18,6 @@ export default class MatchScene extends GameScene {
     this._connection.on('data', (info) => {
       this._otherPlayer.setPacket(info);
     })
-
-    this._connection.send('hello world');
   }
 
   update(t, dt) {
