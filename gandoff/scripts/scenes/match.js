@@ -9,15 +9,18 @@ export default class MatchScene extends GameScene {
 
   create(data) {
     super.create();
-    this._localPlayer = new Player(this, this.cameras.main.width / 2, 0);
     this._otherPlayer = new Player(this, this.cameras.main.width / 2, 0);
+    this._localPlayer = new Player(this, this.cameras.main.width / 2, 0);
+
+    this._otherPlayer.tint = 0xFF0000
+
     this._bindKeys();
     this._peer = data.peer;
     this._connection = data.connection;
 
     this._connection.on('data', (info) => {
       this._otherPlayer.setPacket(info);
-    })
+    });
   }
 
   update(t, dt) {

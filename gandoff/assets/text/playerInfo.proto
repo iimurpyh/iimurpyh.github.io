@@ -1,9 +1,19 @@
 package playerinfo;
 syntax = "proto3";
 
-enum MoveDirection {
+enum ConnectionStatus {
+    Success = 0;
+    NotHosting = 1;
+}
+
+enum Direction {
     Left = 0;
     Right = 1;
+}
+
+message JoinInfo {
+    ConnectionStatus status = 1;
+    fixed32 playerColor = 2;
 }
 
 message PlayerStatePacket {
@@ -13,9 +23,9 @@ message PlayerStatePacket {
     float velocityX = 3;
     float velocityY = 4;
 
-    optional bool moveChange = 5;
-    optional MoveDirection moveChangeDirection = 6;
-    optional bool jumpChange = 7;
+    bool moving = 5;
+    Direction facingDirection = 6;
+    bool jumping = 7;
 
     /* State */
     string state = 8;

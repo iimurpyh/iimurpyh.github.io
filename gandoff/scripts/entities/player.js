@@ -43,24 +43,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this._moveChanged = false;
     this._jumpChanged = false;
+
+    this._debugTag = scene.add.text(0, 0, 'text', {backgroundColor: 'black', fontFamily: 'sans-serif'});
+  }
+
+  setDirection(direction) {
+    this._facingDirection = direction;
+    this.setFlipX(direction == Direction.Left);
   }
 
   setMoving(moveDirection, active) {
-    this._moveChanged = true;
-    this._moveDirection = moveDirection;
+    this.setDirection(moveDirection);
+
     if (active) {
       if (moveDirection == Direction.Right) {
         this.body.setAccelerationX(this.walkSpeed);
-        this.setFlipX(false);
       } else {
         this.body.setAccelerationX(-this.walkSpeed);
-        this.setFlipX(true);
       }
-
       this.moving = true;
     } else {
       this.body.setAccelerationX(0);
-      
       this.moving = false;
     }
   }
@@ -78,9 +81,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  getState() {
+    return this._stateManager.stateName;
+  }
+
   update(_t, dt) {
     this.grounded = this.body.onFloor() || this.body.touching.down;
     this._stateManager.updateState(dt);
+
+    this._debugTag.setPosition(this.x, this.y - 100);
+    this._debugTag.setText([this.getState()]);
   }
 
   generatePacket() {
@@ -91,21 +101,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         positionY: this.y,
         velocityX: this.body.velocity.x,
         velocityY: this.body.velocity.y,
+
+        moving: this.moving,
+        facingDirection: this._facingDirection,
+        jumping: this.jumping,
   
         state: this._stateManager.stateName,
         stateDuration: this._stateManager.state.duration
       };
-
-      if (this._moveChanged) {
-        packet.moveChange = this.moving;
-        packet.moveChangeDirection = this._moveDirection;
-        this._moveChanged = false;
-      }
-
-      if (this._jumpChanged) {
-        packet.jumpChange = this.jumping;
-        this._jumpChanged = false;
-      }
 
       let message = PlayerStatePacket.create(packet);
 
@@ -116,6 +119,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   setPacket(message) {
+    // simulated packet loss:
+    // if (Math.random() < 0.9) { return; }
+    
     let array = new Uint8Array(message);
     if (PlayerInfo) {
       const PlayerStatePacket = PlayerInfo.lookupType('playerinfo.PlayerStatePacket');
@@ -123,17 +129,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this.setPosition(info.positionX, info.positionY);
       this.body.setVelocity(info.velocityX, info.velocityY);
 
-      if (info.state) {
-        this._stateManager.set(info.state);
-        this._stateManager.state.duration = info.duration;
+      if (info.moving != this.moving) {
+        this.setMoving(info.facingDirection, info.moving);
+      } else if (info.facingDirection != this._facingDirection) {
+        this.setDirection(info.facingDirection);
       }
 
-      if (info.moveChange != null) {
-        this.setMoving(info.moveChangeDirection, info.moveChange);
+      if (info.jumping != this.jumping) {
+        this.setJumping(info.jumping);
       }
 
-      if (info.jumpChange != null) {
-        this.setJumping(info.jumpChange);
+      this._stateManager.set(info.state);
+      this._stateManager.state.duration = info.duration;
+      if (this.getState() == 'idle') {
+
       }
     }
   }
