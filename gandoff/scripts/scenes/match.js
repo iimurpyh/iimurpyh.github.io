@@ -1,6 +1,6 @@
 import GameScene from '../gameScene.js';
 import Player from '../entities/player.js';
-import Direction from '../input/direction.js';
+import Enum from '../enum.js';
 
 export default class MatchScene extends GameScene {
   constructor() {
@@ -38,11 +38,11 @@ export default class MatchScene extends GameScene {
   }
 
   _onMoveLeft(_event, pressed) {
-    this._localPlayer.setMoving(Direction.Left, pressed);
+    this._localPlayer.setMoving(Enum.Direction.LEFT, pressed);
   }
 
   _onMoveRight(_event, pressed) {
-    this._localPlayer.setMoving(Direction.Right, pressed);
+    this._localPlayer.setMoving(Enum.Direction.RIGHT, pressed);
   }
 
   _onJump(_event, pressed) {

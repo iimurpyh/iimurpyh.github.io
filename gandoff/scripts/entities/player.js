@@ -1,4 +1,4 @@
-import Direction from '../input/direction.js';
+import Enum from '../enum.js';
 import Constants from '../constants.js';
 import StateManager from '../playerStates/stateManager.js';
 import PlayerStateMap from '../playerStates/stateMap.js';
@@ -49,14 +49,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   setDirection(direction) {
     this._facingDirection = direction;
-    this.setFlipX(direction == Direction.Left);
+    this.setFlipX(direction == Enum.Direction.LEFT);
   }
 
   setMoving(moveDirection, active) {
     this.setDirection(moveDirection);
 
     if (active) {
-      if (moveDirection == Direction.Right) {
+      if (moveDirection == Enum.Direction.RIGHT) {
         this.body.setAccelerationX(this.walkSpeed);
       } else {
         this.body.setAccelerationX(-this.walkSpeed);

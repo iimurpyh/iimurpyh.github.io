@@ -1,3 +1,16 @@
+import Enum from '../enum.js';
+import Constants from '../constants.js';
+
+let PlayerInfo;
+
+protobuf.load('assets/text/playerInfo.proto', function(error, root) {
+  if (error) {
+      throw error;
+  }
+
+  PlayerInfo = root;
+});
+
 export default class MenuScene extends Phaser.Scene {
   static menuStates = ['menu-main', 'menu-host', 'menu-join']
 
@@ -32,6 +45,8 @@ export default class MenuScene extends Phaser.Scene {
     // Click callback is going to override 'this' so put it in a variable
     const this_scene = this;
 
+    const JoinInfo = PlayerInfo.lookupType('playerinfo.JoinInfo');
+
     let canHost = false;
 
     this._menu.on('click', function(event) {
@@ -53,15 +68,16 @@ export default class MenuScene extends Phaser.Scene {
         let connection = this_scene._peer.connect(code.toUpperCase());
       
         connection.on('data', (data) => {
-          console.log(data);
-          if (data == 'ready') {
+          let array = new Uint8Array(data);
+          let info = JoinInfo.decode(array);
+          if (info.status = Enum.ConnectionStatus.SUCCESS) {
             this_scene.scene.start('MatchScene', {
               thisClientHosting: false,
               peer: this_scene._peer,
               connection: connection
             });
           } else {
-            this_scene._displayJoinError(data);
+            this_scene._displayJoinError(Constants.ConnectionErrorMessages[info.status]);
           }
         })
         
@@ -79,7 +95,12 @@ export default class MenuScene extends Phaser.Scene {
     this._peer.on('open', () => {
       this._peer.on('connection', (connection) => {
         if (canHost) {
-          connection.send('ready');
+          let message = JoinInfo.create({
+            status: Enum.ConnectionStatus.SUCCESS,
+            playerColor: 0xFFFFFFFF
+          });
+          connection.send(JoinInfo.encode(message).finish());
+
           this.scene.start('MatchScene', {
             thisClientHosting: true,
             peer: this._peer,

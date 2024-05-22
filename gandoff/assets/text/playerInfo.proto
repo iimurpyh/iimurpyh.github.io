@@ -2,13 +2,13 @@ package playerinfo;
 syntax = "proto3";
 
 enum ConnectionStatus {
-    Success = 0;
-    NotHosting = 1;
+    SUCCESS = 0;
+    NOT_HOSTING = 1;
 }
 
 enum Direction {
-    Left = 0;
-    Right = 1;
+    LEFT = 0;
+    RIGHT = 1;
 }
 
 message JoinInfo {
