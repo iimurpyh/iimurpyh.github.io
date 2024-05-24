@@ -28,6 +28,11 @@ export default class MenuScene extends Phaser.Scene {
     }
   }
 
+  _packConnectionMessage(msg) {
+    let message = JoinInfo.create(msg);
+    return JoinInfo.encode(message).finish();
+  }
+
   create() {
     // Generate string of 5 random alphabetical letters as PeerJS identifier
     let roomCode = '';
@@ -66,11 +71,19 @@ export default class MenuScene extends Phaser.Scene {
         let code = this_scene._menu.getChildByID('room-code-entry').value;
         // Try to connect by room key
         let connection = this_scene._peer.connect(code.toUpperCase());
+
+        connection.on('open', () => {
+          connection.send(this._packConnectionMessage({
+            status: Enum.ConnectionStatus.SUCCESS,
+            playerColor: 0xFFFFFFFF
+          }))
+        })
+        
       
         connection.on('data', (data) => {
           let array = new Uint8Array(data);
           let info = JoinInfo.decode(array);
-          if (info.status = Enum.ConnectionStatus.SUCCESS) {
+          if (info.status == Enum.ConnectionStatus.SUCCESS) {
             this_scene.scene.start('MatchScene', {
               thisClientHosting: false,
               peer: this_scene._peer,
@@ -79,7 +92,7 @@ export default class MenuScene extends Phaser.Scene {
           } else {
             this_scene._displayJoinError(Constants.ConnectionErrorMessages[info.status]);
           }
-        })
+        });
         
       }
     });
@@ -95,24 +108,30 @@ export default class MenuScene extends Phaser.Scene {
     this._peer.on('open', () => {
       this._peer.on('connection', (connection) => {
         if (canHost) {
-          let message = JoinInfo.create({
-            status: Enum.ConnectionStatus.SUCCESS,
-            playerColor: 0xFFFFFFFF
-          });
-          connection.send(JoinInfo.encode(message).finish());
+          connection.on('data', () => {
+            let array = new Uint8Array(data);
+            let info = JoinInfo.decode(array);
 
-          this.scene.start('MatchScene', {
-            thisClientHosting: true,
-            peer: this._peer,
-            connection: connection
-          });
+            if (info.status == Enum.ConnectionStatus.SUCCESS) {
+              connection.send(this._packConnectionMessage({
+                status: Enum.ConnectionStatus.SUCCESS,
+                playerColor: 0xFFFFFFFF
+              }))
+              this.scene.start('MatchScene', {
+                thisClientHosting: true,
+                peer: this._peer,
+                connection: connection
+              });
+            }
+          })
+          
         } else {
           connection.send('Error: Peer is not currently hosting.');
         }
       });
     });
 
-    this._menu.getChildByID('room-code-highlight').innerHTML = this_scene._roomCode;
+    this._menu.getChildByID('room-code-highlight').innerHTML = this._roomCode;
     
   }
 }

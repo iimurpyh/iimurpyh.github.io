@@ -8,3 +8,5 @@ const Enum = {
         NOT_HOSTING: 1
     }
 }
+
+export default Enum;

@@ -141,9 +141,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
       this._stateManager.set(info.state);
       this._stateManager.state.duration = info.duration;
-      if (this.getState() == 'idle') {
-
-      }
     }
   }
 }
