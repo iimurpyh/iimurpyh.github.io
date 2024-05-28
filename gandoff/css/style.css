@@ -151,3 +151,10 @@ h1, text {
     min-width: 200px;
     min-height: 2em;
 }
+
+#color-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

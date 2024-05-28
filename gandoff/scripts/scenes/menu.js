@@ -2,6 +2,7 @@ import Enum from '../enum.js';
 import Constants from '../constants.js';
 
 let PlayerInfo;
+let JoinInfo;
 
 protobuf.load('assets/text/playerInfo.proto', function(error, root) {
   if (error) {
@@ -9,7 +10,12 @@ protobuf.load('assets/text/playerInfo.proto', function(error, root) {
   }
 
   PlayerInfo = root;
+  JoinInfo = PlayerInfo.lookupType('playerinfo.JoinInfo');
 });
+
+function colorStringToInt(col) {
+  return (parseInt(col.substr(1), 16) << 8) / 256;
+}
 
 export default class MenuScene extends Phaser.Scene {
   static menuStates = ['menu-main', 'menu-host', 'menu-join']
@@ -50,8 +56,6 @@ export default class MenuScene extends Phaser.Scene {
     // Click callback is going to override 'this' so put it in a variable
     const this_scene = this;
 
-    const JoinInfo = PlayerInfo.lookupType('playerinfo.JoinInfo');
-
     let canHost = false;
 
     this._menu.on('click', function(event) {
@@ -68,26 +72,31 @@ export default class MenuScene extends Phaser.Scene {
       } else if (event.target.name == 'connect') {
         // Clear error message
         this_scene._displayJoinError();
-        let code = this_scene._menu.getChildByID('room-code-entry').value;
+        let code = this.getChildByID('room-code-entry').value;
         // Try to connect by room key
         let connection = this_scene._peer.connect(code.toUpperCase());
+        let playerColor = colorStringToInt(this.getChildByID('player-color').value);
 
         connection.on('open', () => {
-          connection.send(this._packConnectionMessage({
+          connection.send(this_scene._packConnectionMessage({
             status: Enum.ConnectionStatus.SUCCESS,
-            playerColor: 0xFFFFFFFF
+            playerColor: playerColor
           }))
         })
-        
       
         connection.on('data', (data) => {
           let array = new Uint8Array(data);
           let info = JoinInfo.decode(array);
           if (info.status == Enum.ConnectionStatus.SUCCESS) {
+            this_scene._peer.off('open');
+            this_scene._peer.off('connection');
+            connection.off('data');
             this_scene.scene.start('MatchScene', {
               thisClientHosting: false,
               peer: this_scene._peer,
-              connection: connection
+              connection: connection,
+              connectionMessage: info,
+              color: playerColor
             });
           } else {
             this_scene._displayJoinError(Constants.ConnectionErrorMessages[info.status]);
@@ -107,27 +116,36 @@ export default class MenuScene extends Phaser.Scene {
 
     this._peer.on('open', () => {
       this._peer.on('connection', (connection) => {
-        if (canHost) {
-          connection.on('data', () => {
-            let array = new Uint8Array(data);
-            let info = JoinInfo.decode(array);
+        connection.on('data', (data) => {
+          if (!canHost) {
+            console.log('sending denial');
+            connection.send(this._packConnectionMessage({
+              status: Enum.ConnectionStatus.NOT_HOSTING,
+              playerColor: 0xFFFFFF
+            }));
+            return;
+          }
+          let array = new Uint8Array(data);
+          let info = JoinInfo.decode(array);
 
-            if (info.status == Enum.ConnectionStatus.SUCCESS) {
-              connection.send(this._packConnectionMessage({
-                status: Enum.ConnectionStatus.SUCCESS,
-                playerColor: 0xFFFFFFFF
-              }))
-              this.scene.start('MatchScene', {
-                thisClientHosting: true,
-                peer: this._peer,
-                connection: connection
-              });
-            }
-          })
-          
-        } else {
-          connection.send('Error: Peer is not currently hosting.');
-        }
+          if (info.status == Enum.ConnectionStatus.SUCCESS) {
+            let playerColor = colorStringToInt(this._menu.getChildByID('player-color').value);
+            this._peer.off('open');
+            this._peer.off('connection');
+            connection.off('data');
+            connection.send(this._packConnectionMessage({
+              status: Enum.ConnectionStatus.SUCCESS,
+              playerColor: playerColor
+            }))
+            this.scene.start('MatchScene', {
+              thisClientHosting: true,
+              peer: this._peer,
+              connection: connection,
+              connectionMessage: info,
+              color: playerColor
+            });
+          }
+        })
       });
     });
 
