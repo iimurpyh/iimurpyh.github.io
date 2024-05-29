@@ -39,6 +39,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.grounded = false;
     this.moving = false;
     this.jumping = false;
+    this.movementLocked = false;
     this._stateManager = new StateManager(states, 'idle', [this]);
 
     this._moveChanged = false;
@@ -48,14 +49,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   setDirection(direction) {
-    this._facingDirection = direction;
+    this.facingDirection = direction;
     this.setFlipX(direction == Enum.Direction.LEFT);
   }
 
   setMoving(moveDirection, active) {
     this.setDirection(moveDirection);
 
-    if (active) {
+    if (active && !this.movementLocked) {
       if (moveDirection == Enum.Direction.RIGHT) {
         this.body.setAccelerationX(this.walkSpeed);
       } else {
@@ -71,7 +72,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   setJumping(active) {
     this._jumpChanged = true;
     this.jumping = active;
-    if (active) {
+    if (active && !this.movementLocked) {
       if (this.grounded) {
         this.grounded = false;
         this._stateManager.set('jump');
@@ -103,7 +104,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         velocityY: this.body.velocity.y,
 
         moving: this.moving,
-        facingDirection: this._facingDirection,
+        facingDirection: this.facingDirection,
         jumping: this.jumping,
   
         state: this._stateManager.stateName,
@@ -131,7 +132,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
       if (info.moving != this.moving) {
         this.setMoving(info.facingDirection, info.moving);
-      } else if (info.facingDirection != this._facingDirection) {
+      } else if (info.facingDirection != this.facingDirection) {
         this.setDirection(info.facingDirection);
       }
 

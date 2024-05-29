@@ -36,6 +36,8 @@ export default class MatchScene extends GameScene {
     this.keybindHandler.connectToBind('move_left', this._onMoveLeft.bind(this));
     this.keybindHandler.connectToBind('move_right', this._onMoveRight.bind(this));
     this.keybindHandler.connectToBind('jump', this._onJump.bind(this));
+    this.keybindHandler.connectToBind('aim_left', this._onAimLeft.bind(this));
+    this.keybindHandler.connectToBind('aim_right', this._onAimRight.bind(this));
   }
 
   _onMoveLeft(_event, pressed) {
@@ -48,5 +50,19 @@ export default class MatchScene extends GameScene {
 
   _onJump(_event, pressed) {
     this._localPlayer.setJumping(pressed);
+  }
+
+  _onAimLeft(_event, pressed) {
+    if (pressed) {
+      this._localPlayer.setDirection(Enum.Direction.LEFT);
+      this._localPlayer._stateManager.set('swingAttack');
+    }
+  }
+
+  _onAimRight(_event, pressed) {
+    if (pressed) {
+      this._localPlayer.setDirection(Enum.Direction.RIGHT);
+      this._localPlayer._stateManager.set('swingAttack');
+    }
   }
 }

@@ -150,6 +150,8 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     this._menu.getChildByID('room-code-highlight').innerHTML = this._roomCode;
+    // Randomize player color
+    this._menu.getChildByID('player-color').value = '#' + Math.floor(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
     
   }
 }

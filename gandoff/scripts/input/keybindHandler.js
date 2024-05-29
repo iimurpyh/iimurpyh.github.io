@@ -15,6 +15,18 @@ let BindMap = {
         inputs: [
             Phaser.Input.Keyboard.KeyCodes.W
         ]
+    },
+    'aim_left': {
+        inputs: [
+            Phaser.Input.Keyboard.KeyCodes.LEFT
+        ],
+        conflicts: 'aim_right'
+    },
+    'aim_right': {
+        inputs: [
+            Phaser.Input.Keyboard.KeyCodes.RIGHT
+        ],
+        conflicts: 'aim_left'
     }
 };
 
