@@ -56,23 +56,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   setMoving(moveDirection, active) {
     this.setDirection(moveDirection);
 
-    if (active && !this.movementLocked) {
-      if (moveDirection == Enum.Direction.RIGHT) {
-        this.body.setAccelerationX(this.walkSpeed);
-      } else {
-        this.body.setAccelerationX(-this.walkSpeed);
-      }
-      this.moving = true;
-    } else {
-      this.body.setAccelerationX(0);
-      this.moving = false;
-    }
+    this.moving = active;
   }
 
   setJumping(active) {
+    if (this.movementLocked) {return;}
     this._jumpChanged = true;
     this.jumping = active;
-    if (active && !this.movementLocked) {
+    if (active) {
       if (this.grounded) {
         this.grounded = false;
         this._stateManager.set('jump');

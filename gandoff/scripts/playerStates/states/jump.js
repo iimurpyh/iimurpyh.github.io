@@ -9,6 +9,7 @@ export default class Jump extends CharacterState {
 
     enter(player) {
         super.enter(player);
+        this.duration = player.jumpTime;
         player.grounded = false;
     }
 

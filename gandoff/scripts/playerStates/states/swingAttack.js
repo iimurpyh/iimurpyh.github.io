@@ -9,6 +9,7 @@ export default class SwingAttack extends CharacterState {
     }
 
     enter(player) {
+        super.enter(player);
         this.onDuration(1, () => {
             player.setVelocityX(1000);
         });

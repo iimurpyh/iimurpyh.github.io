@@ -1,3 +1,5 @@
+import Enum from '../enum.js';
+
 export default class CharacterState {
     constructor() {
         this.animationName = 'idle';
@@ -10,9 +12,22 @@ export default class CharacterState {
     }
 
     update(player, dt) {
-        this.elapsedTime += dt/1000;
+        if (this.duration != -1) {
+            this.elapsedTime += dt/1000;
+        }
+        
         if (this.elapsedTime >= this.duration) {
             return 'idle';
+        }
+
+        if (!this.locksMovement && player.moving) {
+            if (player.facingDirection == Enum.Direction.RIGHT) {
+                player.body.setAccelerationX(this.walkSpeed);
+            } else {
+                player.body.setAccelerationX(-this.walkSpeed);
+            }
+        } else {
+            player.body.setAccelerationX(0);
         }
 
         for (let i = this._durationCallbacks.length-1; i >= 0; i--) {
@@ -25,13 +40,8 @@ export default class CharacterState {
     }
 
     enter(player) {
-        console.log('setting time to 0');
         this.elapsedTime = 0;
         player.movementLocked = this.locksMovement;
-        if (this.locksMovement) {
-            player.setMoving(player.facingDirection, false);
-            player.setJumping(false);
-        }
         player.play({
             key: this.animationName,
             repeat: this.animationLoop ? -1 : 0
