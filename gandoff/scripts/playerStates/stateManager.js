@@ -2,8 +2,7 @@ export default class StateManager {
     constructor(stateMap = {}, initialStateName, args = []) {
         this._stateMap = stateMap;
         this._args = args;
-        this.state = stateMap[initialStateName];
-        this.stateName = initialStateName;
+        this.set(initialStateName);
     }
 
     set(stateName) {

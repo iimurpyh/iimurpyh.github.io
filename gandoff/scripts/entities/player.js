@@ -39,7 +39,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.grounded = false;
     this.moving = false;
     this.jumping = false;
-    this.movementLocked = false;
+    this.facingDirection = Enum.Direction.LEFT;
+    this.actualDirection = Enum.Direction.LEFT;
     this._stateManager = new StateManager(states, 'idle', [this]);
 
     this._moveChanged = false;
@@ -48,9 +49,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this._debugTag = scene.add.text(0, 0, 'text', {backgroundColor: 'black', fontFamily: 'sans-serif'});
   }
 
-  setDirection(direction) {
+  setActualDirection(direction) {
+    this.actualDirection = direction;
+    player.setFlipX(this.actualDirection == Enum.Direction.LEFT);
+  }
+
+  setFacingDirection(direction) {
     this.facingDirection = direction;
-    this.setFlipX(direction == Enum.Direction.LEFT);
   }
 
   setMoving(moveDirection, active) {
@@ -82,7 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this._stateManager.updateState(dt);
 
     this._debugTag.setPosition(this.x, this.y - 100);
-    this._debugTag.setText([this.getState()]);
+    this._debugTag.setText([this.getState(), this.body.acceleration.x]);
   }
 
   generatePacket() {

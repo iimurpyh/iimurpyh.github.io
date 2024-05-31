@@ -2,7 +2,7 @@ import Enum from './enum.js';
 
 const Constants = {
     Player: {
-        DRAG: 1200,
+        DRAG: 2000,
         WALK_SPEED: 1700,
         JUMP_POWER: 700,
         JUMP_TIME: 0.3,

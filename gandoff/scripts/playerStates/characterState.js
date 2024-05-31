@@ -14,21 +14,24 @@ export default class CharacterState {
     update(player, dt) {
         if (this.duration != -1) {
             this.elapsedTime += dt/1000;
-        }
-        
-        if (this.elapsedTime >= this.duration) {
-            return 'idle';
+            if (this.elapsedTime >= this.duration) {
+                return 'idle';
+            }
         }
 
-        if (!this.locksMovement && player.moving) {
-            if (player.facingDirection == Enum.Direction.RIGHT) {
-                player.body.setAccelerationX(this.walkSpeed);
-            } else {
-                player.body.setAccelerationX(-this.walkSpeed);
+        if (!this.locksMovement) {
+            player.setActualDirection(player.facingDirection);
+            if (player.moving) {
+                if (player.facingDirection == Enum.Direction.RIGHT) {
+                    player.body.setAccelerationX(player.walkSpeed);
+                } else {
+                    player.body.setAccelerationX(-player.walkSpeed);
+                }
             }
         } else {
             player.body.setAccelerationX(0);
         }
+        
 
         for (let i = this._durationCallbacks.length-1; i >= 0; i--) {
             let info = this._durationCallbacks[i];

@@ -5,7 +5,6 @@ export default class Run extends CharacterState {
         super();
         this.animationName = 'run';
         this.animationLoop = true;
-        console.log(this.started);
     }
 
     update(player, dt) {
