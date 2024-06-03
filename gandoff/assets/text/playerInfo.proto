@@ -25,11 +25,12 @@ message PlayerStatePacket {
 
     bool moving = 5;
     Direction facingDirection = 6;
-    bool jumping = 7;
+    Direction actualDirection = 7;
+    bool jumping = 8;
 
     /* State */
-    string state = 8;
-    float stateDuration = 9;
+    string state = 9;
+    float stateDuration = 10;
 
     
 }

@@ -27,6 +27,8 @@ export default class CharacterState {
                 } else {
                     player.body.setAccelerationX(-player.walkSpeed);
                 }
+            } else {
+                player.body.setAccelerationX(0);
             }
         } else {
             player.body.setAccelerationX(0);

@@ -10,6 +10,7 @@ export default class SwingAttack extends CharacterState {
 
     enter(player) {
         super.enter(player);
+        player.setActualDirection(player.facingDirection);
         this.onDuration(1, () => {
             player.setVelocityX(1000);
         });

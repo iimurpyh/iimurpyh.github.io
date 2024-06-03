@@ -51,7 +51,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   setActualDirection(direction) {
     this.actualDirection = direction;
-    player.setFlipX(this.actualDirection == Enum.Direction.LEFT);
+    this.setFlipX(this.actualDirection == Enum.Direction.LEFT);
   }
 
   setFacingDirection(direction) {
@@ -59,7 +59,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   setMoving(moveDirection, active) {
-    this.setDirection(moveDirection);
+    this.setFacingDirection(moveDirection);
 
     this.moving = active;
   }
@@ -87,7 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this._stateManager.updateState(dt);
 
     this._debugTag.setPosition(this.x, this.y - 100);
-    this._debugTag.setText([this.getState(), this.body.acceleration.x]);
+    this._debugTag.setText([this.getState(), this.facingDirection, this.actualDirection]);
   }
 
   generatePacket() {
@@ -101,6 +101,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         moving: this.moving,
         facingDirection: this.facingDirection,
+        actualDirection: this.actualDirection,
         jumping: this.jumping,
   
         state: this._stateManager.stateName,
@@ -108,7 +109,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       };
 
       let message = PlayerStatePacket.create(packet);
-
       return PlayerStatePacket.encode(message).finish();
     } else {
       return null;
@@ -128,10 +128,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
       if (info.moving != this.moving) {
         this.setMoving(info.facingDirection, info.moving);
-      } else if (info.facingDirection != this.facingDirection) {
-        this.setDirection(info.facingDirection);
       }
-
+      if (info.actualDirection != this.actualDirection) {
+        this.setActualDirection(info.actualDirection);
+      }
       if (info.jumping != this.jumping) {
         this.setJumping(info.jumping);
       }
