@@ -2,6 +2,7 @@ import Enum from '../enum.js';
 import Constants from '../constants.js';
 import StateManager from '../playerStates/stateManager.js';
 import PlayerStateMap from '../playerStates/stateMap.js';
+import Hitbox from './hitbox.js';
 
 let PlayerInfo;
 
@@ -14,26 +15,29 @@ protobuf.load('assets/text/playerInfo.proto', function(error, root) {
 });
 
 
-export default class Player extends Phaser.Physics.Arcade.Sprite {
+export default class Player extends Phaser.GameObjects.Container {
   constructor(scene, x, y) {
-    super(scene, x, y, 'player');
+    super(scene, 'player');
+
+    this.sprite = scene.physics.add.sprite(x, y)
+    scene.physics.add.existing(this.sprite);
     scene.add.existing(this);
-    scene.physics.add.existing(this);
+    
 
     this.walkSpeed = Constants.Player.WALK_SPEED;
     this.jumpPower = Constants.Player.JUMP_POWER;
     this.jumpTime = Constants.Player.JUMP_TIME;
 
-    this.setCollideWorldBounds(true)
-    this.setInteractive();
-    this.body.setDrag(Constants.Player.DRAG, 0);
-    this.body.maxVelocity.set(Constants.Player.MAX_SPEED_X, Constants.Player.MAX_SPEED_Y);
+    this.sprite.setCollideWorldBounds(true)
+    this.sprite.setInteractive();
+    this.sprite.body.setDrag(Constants.Player.DRAG, 0);
+    this.sprite.body.maxVelocity.set(Constants.Player.MAX_SPEED_X, Constants.Player.MAX_SPEED_Y);
 
 
     let states = {}
     // Build player state map
     for (let stateName in PlayerStateMap) {
-      states[stateName] = new PlayerStateMap[stateName]();
+      states[stateName] = new PlayerStateMap[stateName](this);
     }
 
     this.grounded = false;
@@ -46,12 +50,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this._moveChanged = false;
     this._jumpChanged = false;
 
+    this._hitboxes = {};
+    this.hitboxGroup = scene.add.group();
     this._debugTag = scene.add.text(0, 0, 'text', {backgroundColor: 'black', fontFamily: 'sans-serif'});
+  }
+
+  makeHitbox(hitboxName, x, y, w, h) {
+    let hitbox = new Hitbox(this.scene, this, x, y, w, h);
+    this._hitboxes[hitboxName] = hitbox;
+    this.hitboxGroup.add(hitbox);
+    this.add(hitbox);
   }
 
   setActualDirection(direction) {
     this.actualDirection = direction;
-    this.setFlipX(this.actualDirection == Enum.Direction.LEFT);
+    this.sprite.setFlipX(this.actualDirection == Enum.Direction.LEFT);
   }
 
   setFacingDirection(direction) {
@@ -124,7 +137,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       const PlayerStatePacket = PlayerInfo.lookupType('playerinfo.PlayerStatePacket');
       let info = PlayerStatePacket.decode(array);
       this.setPosition(info.positionX, info.positionY);
-      this.body.setVelocity(info.velocityX, info.velocityY);
+      this.sprite.body.setVelocity(info.velocityX, info.velocityY);
 
       if (info.moving != this.moving) {
         this.setMoving(info.facingDirection, info.moving);

@@ -54,12 +54,14 @@ export default class MatchScene extends GameScene {
 
   _onAimLeft(_event, pressed) {
     if (pressed) {
+      this._localPlayer.setFacingDirection(Enum.Direction.LEFT);
       this._localPlayer._stateManager.set('swingAttack');
     }
   }
 
   _onAimRight(_event, pressed) {
     if (pressed) {
+      this._localPlayer.setFacingDirection(Enum.Direction.RIGHT);
       this._localPlayer._stateManager.set('swingAttack');
     }
   }

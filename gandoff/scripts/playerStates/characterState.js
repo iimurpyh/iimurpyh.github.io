@@ -1,7 +1,8 @@
 import Enum from '../enum.js';
+import Hitbox from '../entities/hitbox.js';
 
 export default class CharacterState {
-    constructor() {
+    constructor(_player) {
         this.animationName = 'idle';
         this.animationLoop = false;
         this.duration = -1;
@@ -9,6 +10,7 @@ export default class CharacterState {
         this.locksMovement = false;
         this.started = false;
         this._durationCallbacks = [];
+        this._hitboxes = {};
     }
 
     update(player, dt) {
@@ -23,15 +25,15 @@ export default class CharacterState {
             player.setActualDirection(player.facingDirection);
             if (player.moving) {
                 if (player.facingDirection == Enum.Direction.RIGHT) {
-                    player.body.setAccelerationX(player.walkSpeed);
+                    player.sprite.body.setAccelerationX(player.walkSpeed);
                 } else {
-                    player.body.setAccelerationX(-player.walkSpeed);
+                    player.sprite.body.setAccelerationX(-player.walkSpeed);
                 }
             } else {
-                player.body.setAccelerationX(0);
+                player.sprite.body.setAccelerationX(0);
             }
         } else {
-            player.body.setAccelerationX(0);
+            player.sprite.body.setAccelerationX(0);
         }
         
 
