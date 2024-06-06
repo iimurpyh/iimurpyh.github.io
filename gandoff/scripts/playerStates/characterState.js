@@ -48,8 +48,8 @@ export default class CharacterState {
 
     enter(player) {
         this.elapsedTime = 0;
-        player.movementLocked = this.locksMovement;
-        player.play({
+        player.sprite.body.movementLocked = this.locksMovement;
+        player.sprite.play({
             key: this.animationName,
             repeat: this.animationLoop ? -1 : 0
         });

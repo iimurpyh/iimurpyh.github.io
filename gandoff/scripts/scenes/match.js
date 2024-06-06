@@ -12,8 +12,8 @@ export default class MatchScene extends GameScene {
     this._otherPlayer = new Player(this, this.cameras.main.width / 2, 0);
     this._localPlayer = new Player(this, this.cameras.main.width / 2, 0);
 
-    this._localPlayer.tint = data.color;
-    this._otherPlayer.tint = data.connectionMessage.playerColor;
+    this._localPlayer.sprite.tint = data.color;
+    this._otherPlayer.sprite.tint = data.connectionMessage.playerColor;
 
     this._bindKeys();
     this._peer = data.peer;

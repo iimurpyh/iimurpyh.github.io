@@ -17,22 +17,25 @@ protobuf.load('assets/text/playerInfo.proto', function(error, root) {
 
 export default class Player extends Phaser.GameObjects.Container {
   constructor(scene, x, y) {
-    super(scene, 'player');
+    super(scene, x, y);
 
-    this.sprite = scene.physics.add.sprite(x, y)
+    this.sprite = scene.physics.add.sprite(x, y, 'player');
     scene.physics.add.existing(this.sprite);
     scene.add.existing(this);
     
+    this.add(this.sprite);
 
     this.walkSpeed = Constants.Player.WALK_SPEED;
     this.jumpPower = Constants.Player.JUMP_POWER;
     this.jumpTime = Constants.Player.JUMP_TIME;
 
-    this.sprite.setCollideWorldBounds(true)
+    this.sprite.setCollideWorldBounds(true);
     this.sprite.setInteractive();
     this.sprite.body.setDrag(Constants.Player.DRAG, 0);
     this.sprite.body.maxVelocity.set(Constants.Player.MAX_SPEED_X, Constants.Player.MAX_SPEED_Y);
 
+    this._hitboxes = {};
+    this.hitboxGroup = scene.add.group();
 
     let states = {}
     // Build player state map
@@ -50,8 +53,6 @@ export default class Player extends Phaser.GameObjects.Container {
     this._moveChanged = false;
     this._jumpChanged = false;
 
-    this._hitboxes = {};
-    this.hitboxGroup = scene.add.group();
     this._debugTag = scene.add.text(0, 0, 'text', {backgroundColor: 'black', fontFamily: 'sans-serif'});
   }
 
@@ -59,7 +60,6 @@ export default class Player extends Phaser.GameObjects.Container {
     let hitbox = new Hitbox(this.scene, this, x, y, w, h);
     this._hitboxes[hitboxName] = hitbox;
     this.hitboxGroup.add(hitbox);
-    this.add(hitbox);
   }
 
   setActualDirection(direction) {
@@ -96,11 +96,11 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   update(_t, dt) {
-    this.grounded = this.body.onFloor() || this.body.touching.down;
+    this.grounded = this.sprite.body.onFloor() || this.sprite.body.touching.down;
     this._stateManager.updateState(dt);
 
-    this._debugTag.setPosition(this.x, this.y - 100);
-    this._debugTag.setText([this.getState(), this.facingDirection, this.actualDirection]);
+    this._debugTag.setPosition(this.sprite.x, this.sprite.y - 100);
+    this._debugTag.setText([this.getState(), this._hitboxes["swingAttack1"].body.position.x, this._hitboxes["swingAttack1"].body.position.y]);
   }
 
   generatePacket() {
@@ -109,8 +109,8 @@ export default class Player extends Phaser.GameObjects.Container {
       let packet = {
         positionX: this.x,
         positionY: this.y,
-        velocityX: this.body.velocity.x,
-        velocityY: this.body.velocity.y,
+        velocityX: this.sprite.body.velocity.x,
+        velocityY: this.sprite.body.velocity.y,
 
         moving: this.moving,
         facingDirection: this.facingDirection,

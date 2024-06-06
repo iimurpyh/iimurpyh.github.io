@@ -15,7 +15,7 @@ export default class Jump extends CharacterState {
 
     update(player, dt) {
         super.update(player, dt);
-        player.setVelocityY(-player.jumpPower);
+        player.sprite.body.setVelocityY(-player.jumpPower);
 
         if (this.elapsedTime >= player.jumpTime) {
             return 'fall';
