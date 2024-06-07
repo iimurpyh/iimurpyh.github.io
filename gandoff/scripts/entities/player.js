@@ -19,9 +19,12 @@ export default class Player extends Phaser.GameObjects.Container {
   constructor(scene, x, y) {
     super(scene, x, y);
 
-    this.sprite = scene.physics.add.sprite(x, y, 'player');
+    this.sprite = scene.physics.add.sprite(0, 0,'player');
     scene.physics.add.existing(this.sprite);
     scene.add.existing(this);
+
+    scene.physics.add.existing(this);
+    this.body.setCollideWorldBounds(true);
     
     this.add(this.sprite);
 
@@ -59,7 +62,8 @@ export default class Player extends Phaser.GameObjects.Container {
   makeHitbox(hitboxName, x, y, w, h) {
     let hitbox = new Hitbox(this.scene, this, x, y, w, h);
     this._hitboxes[hitboxName] = hitbox;
-    this.hitboxGroup.add(hitbox);
+    //this.hitboxGroup.add(hitbox);
+    this.add(hitbox);
   }
 
   setActualDirection(direction) {
@@ -99,7 +103,7 @@ export default class Player extends Phaser.GameObjects.Container {
     this.grounded = this.sprite.body.onFloor() || this.sprite.body.touching.down;
     this._stateManager.updateState(dt);
 
-    this._debugTag.setPosition(this.sprite.x, this.sprite.y - 100);
+    this._debugTag.setPosition(this.position.x, this.position.y - 100);
     this._debugTag.setText([this.getState(), this._hitboxes["swingAttack1"].body.position.x, this._hitboxes["swingAttack1"].body.position.y]);
   }
 
