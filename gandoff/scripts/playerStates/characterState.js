@@ -25,15 +25,15 @@ export default class CharacterState {
             player.setActualDirection(player.facingDirection);
             if (player.moving) {
                 if (player.facingDirection == Enum.Direction.RIGHT) {
-                    player.sprite.body.setAccelerationX(player.walkSpeed);
+                    player.body.setAccelerationX(player.walkSpeed);
                 } else {
-                    player.sprite.body.setAccelerationX(-player.walkSpeed);
+                    player.body.setAccelerationX(-player.walkSpeed);
                 }
             } else {
-                player.sprite.body.setAccelerationX(0);
+                player.body.setAccelerationX(0);
             }
         } else {
-            player.sprite.body.setAccelerationX(0);
+            player.body.setAccelerationX(0);
         }
         
 
@@ -48,7 +48,7 @@ export default class CharacterState {
 
     enter(player) {
         this.elapsedTime = 0;
-        player.sprite.body.movementLocked = this.locksMovement;
+        player.sprite.movementLocked = this.locksMovement;
         player.sprite.play({
             key: this.animationName,
             repeat: this.animationLoop ? -1 : 0
