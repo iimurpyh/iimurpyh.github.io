@@ -4,6 +4,7 @@ import Hitbox from '../entities/hitbox.js';
 export default class CharacterState {
     constructor(_player) {
         this.animationName = 'idle';
+        this.frameRate = 5;
         this.animationLoop = false;
         this.duration = -1;
         this.elapsedTime = 0;
@@ -48,10 +49,11 @@ export default class CharacterState {
 
     enter(player) {
         this.elapsedTime = 0;
-        player.sprite.movementLocked = this.locksMovement;
+        player.movementLocked = this.locksMovement;
         player.sprite.play({
             key: this.animationName,
-            repeat: this.animationLoop ? -1 : 0
+            repeat: this.animationLoop ? -1 : 0,
+            frameRate: this.frameRate
         });
 
         this.started = true;

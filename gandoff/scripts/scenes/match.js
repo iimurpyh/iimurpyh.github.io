@@ -15,6 +15,10 @@ export default class MatchScene extends GameScene {
     this._localPlayer.sprite.tint = data.color;
     this._otherPlayer.sprite.tint = data.connectionMessage.playerColor;
 
+    this.physics.arcade.overlap(this._localPlayer.hitboxGroup, () => {
+      console.log('dealt damage');
+    })
+
     this._bindKeys();
     this._peer = data.peer;
     this._connection = data.connection;

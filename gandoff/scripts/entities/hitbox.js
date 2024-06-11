@@ -1,10 +1,11 @@
 export default class Hitbox extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, player, offsetX, offsetY, w, h) {
-        super(scene, offsetX, offsetY, 'hitbox');
+        super(scene, 0, 0, 'hitbox');
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        this.w = w;
-        this.h = h;
-        scene.physics.add.existing(this, true);
+        this.width = w;
+        this.height = h;
+        scene.physics.add.existing(this);
+        this.body.setSize(w, h);
     }
 }

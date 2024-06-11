@@ -44,6 +44,7 @@ export default class Player extends Phaser.GameObjects.Container {
     this.grounded = false;
     this.moving = false;
     this.jumping = false;
+    this.movementLocked = false;
     this.facingDirection = Enum.Direction.LEFT;
     this.actualDirection = Enum.Direction.LEFT;
     this._stateManager = new StateManager(states, 'idle', [this]);
@@ -59,6 +60,10 @@ export default class Player extends Phaser.GameObjects.Container {
     this._hitboxes[hitboxName] = hitbox;
     //this.hitboxGroup.add(hitbox);
     this.add(hitbox);
+  }
+
+  enableHitbox(hitboxName, on) {
+    this._hitboxes[hitboxName].setEnable(on);
   }
 
   setActualDirection(direction) {
@@ -98,12 +103,17 @@ export default class Player extends Phaser.GameObjects.Container {
     this.grounded = this.body.onFloor() || this.body.touching.down;
     this._stateManager.updateState(dt);
 
-    this._debugTag.setPosition(this.position.x, this.position.y - 100);
+    this._debugTag.setPosition(this.body.position.x, this.body.position.y - 100);
     for (let hitboxName in this._hitboxes) {
       let hitbox = this._hitboxes[hitboxName];
-      hitbox.body.position = this.body.position + new Phaser.Math.Vector2(hitbox.offsetX, hitbox.offsetY);
+      let offset = hitbox.offsetX;
+      if (this.actualDirection == Enum.Direction.LEFT) {
+        offset = -hitbox.offsetX;
+      }
+      hitbox.body.position.x = this.x + offset;
+      hitbox.body.position.y = this.y + hitbox.offsetY;
     }
-    //this._debugTag.setText([this.getState(), this._hitboxes["swingAttack1"].body.position.x, this._hitboxes["swingAttack1"].body.position.y]);
+    this._debugTag.setText([this.getState(), this.movementLocked, this.actualDirection == Enum.Direction]);
   }
 
   generatePacket() {
